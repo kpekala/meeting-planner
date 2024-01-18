@@ -1,5 +1,6 @@
-package com.kpekala.meetingplanner.domain.user;
+package com.kpekala.meetingplanner.domain.user.entity;
 
+import com.kpekala.meetingplanner.domain.meeting.entity.Meeting;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,6 +33,9 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
+
+    @ManyToMany
+    private List<Meeting> meetings = new ArrayList<>();
 
     public User(String email, String password) {
         this.email = email;

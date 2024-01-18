@@ -1,4 +1,4 @@
-package com.kpekala.meetingplanner.domain.user;
+package com.kpekala.meetingplanner.domain.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

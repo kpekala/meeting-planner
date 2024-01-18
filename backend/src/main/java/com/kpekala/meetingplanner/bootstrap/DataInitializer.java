@@ -1,8 +1,8 @@
 package com.kpekala.meetingplanner.bootstrap;
 
-import com.kpekala.meetingplanner.domain.user.Role;
+import com.kpekala.meetingplanner.domain.user.entity.Role;
 import com.kpekala.meetingplanner.domain.user.RoleRepository;
-import com.kpekala.meetingplanner.domain.user.User;
+import com.kpekala.meetingplanner.domain.user.entity.User;
 import com.kpekala.meetingplanner.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
