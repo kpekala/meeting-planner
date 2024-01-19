@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { MainComponent } from './main/main.component';
 import { HeaderComponent } from './main/header/header.component';
+import { AddMeetingComponent } from './main/add-meeting/add-meeting.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { HeaderComponent } from './main/header/header.component';
     AppComponent,
     AuthComponent,
     MainComponent,
-    HeaderComponent
+    HeaderComponent,
+    AddMeetingComponent
   ],
   imports: [
     BrowserModule,
