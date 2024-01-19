@@ -44,7 +44,6 @@ public class MeetingServiceTest {
         var asiaMeetings = List.of(new Meeting(1, "Asia meeting",
                 ZonedDateTime.now().plusMinutes(120), 30, new ArrayList<>()));
 
-
         var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
         asiaMeetings.get(0).setUsers(List.of(asia));
         var basia = new User(2, "basia@t.pl", "123456", null, List.of());
