@@ -15,8 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MeetingServiceImpl implements MeetingService{
 
-    private final MeetingRepository meetingRepository;
-
     private final UserRepository userRepository;
 
     @Override
@@ -26,7 +24,7 @@ public class MeetingServiceImpl implements MeetingService{
 
         validateUsersCanJoinMeeting(users, request.getStartDate(), request.getDurationMinutes());
 
-        return null;
+        return new AddMeetingResponse(true);
     }
 
     private void validateUsersCanJoinMeeting(List<UserDto> users, ZonedDateTime startDate, int durationMinutes) {
@@ -36,12 +34,16 @@ public class MeetingServiceImpl implements MeetingService{
     }
 
     private void validateUserCanJoinMeeting(UserDto userDto, ZonedDateTime startDate, int durationMinutes) {
-        var userEntity = userRepository.findByEmail(userDto.getEmail()).orElseThrow();
+        var userOptional = userRepository.findByEmail(userDto.getEmail());
 
-        var userOptional = userEntity.getMeetings().stream()
+        // If user is not present, we can skip validation
+        if(userOptional.isEmpty())
+            return;
+
+        var meetingOptional = userOptional.get().getMeetings().stream()
                 .filter(meeting -> meetingOverlaps(meeting, startDate, durationMinutes)).findFirst();
 
-        if (userOptional.isPresent())
+        if (meetingOptional.isPresent())
             throw new MeetingOverlapsException();
     }
 

@@ -2,6 +2,7 @@ package com.kpekala.meetingplanner.domain.user.entity;
 
 import com.kpekala.meetingplanner.domain.meeting.entity.Meeting;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class User implements UserDetails {
