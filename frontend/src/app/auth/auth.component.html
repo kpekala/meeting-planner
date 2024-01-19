@@ -1,26 +1,24 @@
 <div class="auth-container">
     <div class="row row-center" style="margin: 0;">
-        <div class="col-md-4">
-            <div class="login-card">
-                <br>
-                <h2 style="text-align: center;">Welcome !</h2>
-                <br>
-                <div class="row row-center">
-                    <div class="col-sm-8">
-                        <form [formGroup]="authForm" (ngSubmit)="onLoginButtonClicked()">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">@</span>
-                                <input type="email" class="form-control" 
-                                placeholder="Email address"  formControlName="email">
+        <div class="login-card">
+            <br>
+            <h2 style="text-align: center;">Welcome !</h2>
+            <br>
+            <div class="row row-center">
+                <div class="col-sm-10">
+                    <form [formGroup]="authForm" (ngSubmit)="onLoginButtonClicked()">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">@</span>
+                            <input type="email" class="form-control" 
+                            placeholder="Email address"  formControlName="email">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" type="password" placeholder="Password" formControlName="password">
                             </div>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text">$</span>
-                                <input type="text" class="form-control" type="password" placeholder="Password" formControlName="password">
-                              </div>
-        
-                              <button type="button" class="btn btn-primary" type="submit" [disabled]="!authForm.valid">Log in</button>
-                        </form>
-                    </div>
+    
+                            <button type="button" class="btn btn-primary" type="submit" [disabled]="!authForm.valid">Log in</button>
+                    </form>
                 </div>
             </div>
         </div>

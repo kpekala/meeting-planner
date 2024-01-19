@@ -4,11 +4,15 @@
 }
 
 .login-card {
-    height: 24rem;
+    width: 28rem;
+    padding-bottom: 2rem;
     border-radius: 8px;
     box-shadow: 8px 8px 47px 0px rgba(0, 0, 0, 0.2);
     background-color: white;
     margin-top: 10rem;
+    @media (max-width: 600px) {
+        width: 100%;
+    }
 }
 
 .row-center {
