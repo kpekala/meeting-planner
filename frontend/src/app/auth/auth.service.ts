@@ -39,4 +39,8 @@ export class AuthService {
         const tokenExpirationDate = Date.parse(tokenExpirationDateString);
         return tokenExpirationDate > Date.now();
     }
+
+    getTokenHeader(): string { 
+        return `Bearer ${localStorage.getItem('token')}`;
+    }
 }

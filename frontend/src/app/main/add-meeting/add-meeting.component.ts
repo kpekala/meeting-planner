@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MainService } from '../main.service';
 
 @Component({
   selector: 'app-add-meeting',
@@ -13,7 +14,7 @@ export class AddMeetingComponent {
   editMode = false;
   meetingForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private route: ActivatedRoute, private router: Router, private mainService: MainService) {}
 
   ngOnInit() {
     this.route.params.subscribe(
@@ -52,6 +53,22 @@ export class AddMeetingComponent {
   }
 
   onSubmit() {
-    console.log(this.meetingForm.value);
+    const formValue = this.meetingForm.value;
+    const users = formValue['guests'].map(guest => {return {email: guest.email}});
+    const request = {
+      name: formValue['name'],
+      startDate: new Date(formValue['startDate']).toISOString(),
+      durationMinutes: formValue['duration'],
+      users: users
+    };
+    console.log(request);
+    this.mainService.addMeeting(request).subscribe({
+      next: () => {
+        console.log('Added meeting');
+      },
+      error: () => {
+        console.log('Error during meeting adding');
+      }
+    });
   }
 }

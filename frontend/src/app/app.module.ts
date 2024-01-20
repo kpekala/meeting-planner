@@ -9,6 +9,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { MainComponent } from './main/main.component';
 import { HeaderComponent } from './main/header/header.component';
 import { AddMeetingComponent } from './main/add-meeting/add-meeting.component';
+import { AuthInterceptorService } from './auth/auth.interceptor.service';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { AddMeetingComponent } from './main/add-meeting/add-meeting.component';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

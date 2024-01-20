@@ -7,12 +7,15 @@ import com.kpekala.meetingplanner.domain.meeting.entity.Meeting;
 import com.kpekala.meetingplanner.domain.meeting.exception.MeetingOverlapsException;
 import com.kpekala.meetingplanner.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Service
 public class MeetingServiceImpl implements MeetingService{
 
     private final UserRepository userRepository;
