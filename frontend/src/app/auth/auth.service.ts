@@ -30,4 +30,13 @@ export class AuthService {
         localStorage.setItem('expiration', response.tokenExpirationDate);
         localStorage.setItem('email', email);
     }
+
+    isUserLoggedIn(): boolean {
+        const token = localStorage.getItem('token');
+        const tokenExpirationDateString = localStorage.getItem('expiration');
+        if (token == null || tokenExpirationDateString == null)
+            return false;
+        const tokenExpirationDate = Date.parse(tokenExpirationDateString);
+        return tokenExpirationDate > Date.now();
+    }
 }
