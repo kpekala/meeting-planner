@@ -14,6 +14,9 @@ export class AddMeetingComponent {
   editMode = false;
   meetingForm: FormGroup;
 
+  errorMsg = null;
+  addedMeetingInfo = null;
+
   constructor(private route: ActivatedRoute, private router: Router, private mainService: MainService) {}
 
   ngOnInit() {
@@ -64,10 +67,12 @@ export class AddMeetingComponent {
     console.log(request);
     this.mainService.addMeeting(request).subscribe({
       next: () => {
-        console.log('Added meeting');
+        this.addedMeetingInfo = 'Added meeting successfuly';
+        this.errorMsg = null;
       },
-      error: () => {
-        console.log('Error during meeting adding');
+      error: (msg) => {
+        this.addedMeetingInfo = null;
+        this.errorMsg = msg.error.detail;
       }
     });
   }

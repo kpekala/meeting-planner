@@ -28,6 +28,9 @@ public class MeetingServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private MeetingRepository meetingRepository;
+
     @InjectMocks
     private MeetingServiceImpl meetingService;
 

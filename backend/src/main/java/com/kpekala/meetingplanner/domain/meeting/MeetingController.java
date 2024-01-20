@@ -2,12 +2,12 @@ package com.kpekala.meetingplanner.domain.meeting;
 
 import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingRequest;
 import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingResponse;
+import com.kpekala.meetingplanner.domain.meeting.exception.MeetingOverlapsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/meeting")
@@ -21,5 +21,10 @@ public class MeetingController {
     public AddMeetingResponse addMeeting(@RequestBody AddMeetingRequest request) {
         log.info("Add meeting request: {}", request.toString());
         return meetingService.addMeeting(request);
+    }
+
+    @ExceptionHandler({MeetingOverlapsException.class})
+    public ErrorResponse handleMeetingOverlapsException(MeetingOverlapsException exception) {
+        return ErrorResponse.create(exception, HttpStatusCode.valueOf(403), exception.getMessage());
     }
 }

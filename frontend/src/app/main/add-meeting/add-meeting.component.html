@@ -25,7 +25,12 @@
                   </div>
             </div>
             </div>
-            
+            <div *ngIf="errorMsg" class="alert alert-danger" role="alert">
+                {{errorMsg}}
+            </div>
+            <div *ngIf="addedMeetingInfo" class="alert alert-success" role="alert">
+                {{addedMeetingInfo}}
+            </div>
 
             <button class="btn btn-secondary" type="button"
                     style="margin-right: 1rem;" (click)="onAddGuest()">Add guest</button>

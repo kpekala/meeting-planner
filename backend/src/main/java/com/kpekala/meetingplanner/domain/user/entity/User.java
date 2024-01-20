@@ -37,7 +37,14 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     @ManyToMany
+    @JoinTable(name = "user_meetings",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "meeting_id"))
     private List<Meeting> meetings = new ArrayList<>();
+
+    public void addMeeting(Meeting meeting) {
+        meetings.add(meeting);
+    }
 
     public User(String email, String password) {
         this.email = email;

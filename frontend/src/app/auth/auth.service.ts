@@ -43,4 +43,8 @@ export class AuthService {
     getTokenHeader(): string { 
         return `Bearer ${localStorage.getItem('token')}`;
     }
+
+    getUserEmail() {
+        return localStorage.getItem('email');
+    }
 }

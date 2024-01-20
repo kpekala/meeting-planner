@@ -6,12 +6,14 @@ import com.kpekala.meetingplanner.domain.meeting.dto.UserDto;
 import com.kpekala.meetingplanner.domain.meeting.entity.Meeting;
 import com.kpekala.meetingplanner.domain.meeting.exception.MeetingOverlapsException;
 import com.kpekala.meetingplanner.domain.user.UserRepository;
+import com.kpekala.meetingplanner.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,6 +21,7 @@ import java.util.List;
 public class MeetingServiceImpl implements MeetingService{
 
     private final UserRepository userRepository;
+    private final MeetingRepository meetingRepository;
 
     @Override
     @Transactional
@@ -27,7 +30,30 @@ public class MeetingServiceImpl implements MeetingService{
 
         validateUsersCanJoinMeeting(users, request.getStartDate(), request.getDurationMinutes());
 
+        var meeting = prepareMeeting(request);
+        meetingRepository.save(meeting);
+        meeting.getUsers().forEach(user -> {
+            user.addMeeting(meeting);
+            userRepository.save(user);
+        });
+
         return new AddMeetingResponse(true);
+    }
+
+    private Meeting prepareMeeting(AddMeetingRequest request) {
+        var meeting = new Meeting();
+        meeting.setName(request.getName());
+        meeting.setStartDate(request.getStartDate());
+        meeting.setDurationMinutes(request.getDurationMinutes());
+
+        var users = new ArrayList<User>();
+        request.getUsers().forEach(guest -> {
+            var guestOptional = userRepository.findByEmail(guest.getEmail());
+            guestOptional.ifPresent(users::add);
+        });
+        meeting.setUsers(users);
+
+        return meeting;
     }
 
     private void validateUsersCanJoinMeeting(List<UserDto> users, ZonedDateTime startDate, int durationMinutes) {
