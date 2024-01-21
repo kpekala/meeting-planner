@@ -1,0 +1,23 @@
+<div class="row" style="justify-content: center; padding-top: 4rem;">
+    <div class="col-sm-6">
+        <div class="row">
+            <div class="col-12">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">@</span>
+                    <input type="text" class="form-control" [(ngModel)]="email" 
+                        placeholder="Email address">
+                    <button class="btn btn-primary" (click)="onFindMeetingsClick()">Find</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <ul class="list-group">
+                    <li *ngFor="let meeting of meetings" class="list-group-item">
+                        {{meeting.name}} - {{localDateTime(meeting.startDate)}} - {{meeting.durationMinutes}} minutes
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

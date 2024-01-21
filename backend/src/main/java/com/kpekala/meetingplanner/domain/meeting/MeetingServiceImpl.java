@@ -64,7 +64,7 @@ public class MeetingServiceImpl implements MeetingService{
         meeting.setDurationMinutes(request.getDurationMinutes());
 
         var users = new ArrayList<User>();
-        request.getUsers().forEach(guest -> {
+        request.getUsers().stream().distinct().forEach(guest -> {
             var guestOptional = userRepository.findByEmail(guest.getEmail());
             guestOptional.ifPresent(users::add);
         });
