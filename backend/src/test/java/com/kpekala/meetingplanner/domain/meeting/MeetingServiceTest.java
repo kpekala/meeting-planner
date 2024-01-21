@@ -5,7 +5,6 @@ import com.kpekala.meetingplanner.domain.meeting.dto.UserDto;
 import com.kpekala.meetingplanner.domain.meeting.entity.Meeting;
 import com.kpekala.meetingplanner.domain.meeting.exception.MeetingOverlapsException;
 import com.kpekala.meetingplanner.domain.user.UserRepository;
-import com.kpekala.meetingplanner.domain.user.entity.Role;
 import com.kpekala.meetingplanner.domain.user.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,12 +43,13 @@ public class MeetingServiceTest {
         var meetingUsers = List.of(new UserDto(asiaEmail), new UserDto(basiaEmail));
         var request = new AddMeetingRequest("Meeting 1", meetingStartDate, 30, meetingUsers);
 
-        var asiaMeetings = List.of(new Meeting(1, "Asia meeting",
-                ZonedDateTime.now().plusMinutes(120), 30, new ArrayList<>()));
+        var asiaMeetings = new ArrayList<Meeting>();
+        asiaMeetings.add(new Meeting(1, "Asia meeting", ZonedDateTime.now().plusMinutes(120),
+                30, new ArrayList<>()));
 
         var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
         asiaMeetings.get(0).setUsers(List.of(asia));
-        var basia = new User(2, "basia@t.pl", "123456", null, List.of());
+        var basia = new User(2, "basia@t.pl", "123456", null, new ArrayList<>());
 
         when(userRepository.findByEmail(asiaEmail)).thenReturn(Optional.of(asia));
         when(userRepository.findByEmail(basiaEmail)).thenReturn(Optional.of(basia));
@@ -75,10 +75,9 @@ public class MeetingServiceTest {
         var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
         asiaMeetings.get(0).setUsers(List.of(asia));
 
-        // Act
         when(userRepository.findByEmail(asiaEmail)).thenReturn(Optional.of(asia));
 
-        // Assert
+        // Act & Assert
         assertThrows(MeetingOverlapsException.class, () -> meetingService.addMeeting(request));
     }
 
@@ -95,10 +94,9 @@ public class MeetingServiceTest {
         var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
         asiaMeetings.get(0).setUsers(List.of(asia));
 
-        // Act
         when(userRepository.findByEmail(asiaEmail)).thenReturn(Optional.of(asia));
 
-        // Assert
+        // Act & Assert
         assertThrows(MeetingOverlapsException.class, () -> meetingService.addMeeting(request));
     }
 
@@ -114,11 +112,29 @@ public class MeetingServiceTest {
 
         var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
         asiaMeetings.get(0).setUsers(List.of(asia));
-
-        // Act
         when(userRepository.findByEmail(asiaEmail)).thenReturn(Optional.of(asia));
 
-        // Assert
+        // Act & Assert
         assertThrows(MeetingOverlapsException.class, () -> meetingService.addMeeting(request));
+    }
+
+    @Test
+    public void testGetMeetings() {
+        // Assume
+        var asiaMeetings = List.of(new Meeting(1, "Asia meeting 1", ZonedDateTime.now(), 30, new ArrayList<>()));
+        var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
+        asia.setMeetings(asiaMeetings);
+
+        when(userRepository.findByEmail(asiaEmail)).thenReturn(Optional.of(asia));
+
+        // Act
+        var receivedMeetings = meetingService.getMeetings(asiaEmail);
+
+        // Assert
+        assertThat(receivedMeetings).hasSize(asiaMeetings.size());
+        var meeting1 = receivedMeetings.get(0);
+        assertEquals("Asia meeting 1", meeting1.getName());
+        assertEquals(30, meeting1.getDurationMinutes());
+        assertEquals(asiaMeetings.get(0).getStartDate(), meeting1.getStartDate());
     }
 }

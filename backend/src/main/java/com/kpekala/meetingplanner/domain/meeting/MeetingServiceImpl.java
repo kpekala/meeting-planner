@@ -2,13 +2,13 @@ package com.kpekala.meetingplanner.domain.meeting;
 
 import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingRequest;
 import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingResponse;
+import com.kpekala.meetingplanner.domain.meeting.dto.MeetingDto;
 import com.kpekala.meetingplanner.domain.meeting.dto.UserDto;
 import com.kpekala.meetingplanner.domain.meeting.entity.Meeting;
 import com.kpekala.meetingplanner.domain.meeting.exception.MeetingOverlapsException;
 import com.kpekala.meetingplanner.domain.user.UserRepository;
 import com.kpekala.meetingplanner.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +38,23 @@ public class MeetingServiceImpl implements MeetingService{
         });
 
         return new AddMeetingResponse(true);
+    }
+
+    @Override
+    @Transactional
+    public List<MeetingDto> getMeetings(String userEmail) {
+        var user = userRepository.findByEmail(userEmail).orElseThrow();
+        return user.getMeetings().stream().map(this::mapToMeetingDto).toList();
+    }
+
+    private MeetingDto mapToMeetingDto(Meeting meeting) {
+        var meetingDto = new MeetingDto();
+        meetingDto.setName(meeting.getName());
+        meetingDto.setStartDate(meeting.getStartDate());
+        meetingDto.setDurationMinutes(meeting.getDurationMinutes());
+        meetingDto.setUserDtos(meeting.getUsers().stream().map(user -> new UserDto(user.getEmail())).toList());
+
+        return meetingDto;
     }
 
     private Meeting prepareMeeting(AddMeetingRequest request) {
