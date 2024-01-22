@@ -15,6 +15,7 @@
                 <ul class="list-group">
                     <li *ngFor="let meeting of meetings" class="list-group-item">
                         {{meeting.name}} - {{localDateTime(meeting.startDate)}} - {{meeting.durationMinutes}} minutes
+                        <button class="btn btn-danger" style="float: right;" (click)="onDeleteClick(meeting)">Delete</button>
                     </li>
                 </ul>
             </div>

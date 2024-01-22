@@ -31,6 +31,11 @@ public class MeetingController {
         return meetingService.getMeetings(email);
     }
 
+    @DeleteMapping
+    public void deleteMeeting(@RequestParam int id) {
+        meetingService.removeMeeting(id);
+    }
+
     @ExceptionHandler({MeetingOverlapsException.class})
     public ErrorResponse handleMeetingOverlapsException(MeetingOverlapsException exception) {
         return ErrorResponse.create(exception, HttpStatusCode.valueOf(403), exception.getMessage());

@@ -29,4 +29,14 @@ export class FindMeetingsComponent {
     var time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     return `${date.toDateString()} ${time}`;
   }
+
+  onDeleteClick(meeting: MeetingDto) {
+    this.mainService.deleteMeeting(meeting.id).subscribe({
+      next: () => {
+        console.log("Deleted meeting");
+      },error: (errorMsg) => {
+        console.log("Error when deleting meeting");
+      }
+    });
+  }
 }

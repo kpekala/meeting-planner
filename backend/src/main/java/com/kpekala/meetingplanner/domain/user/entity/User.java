@@ -45,6 +45,9 @@ public class User implements UserDetails {
     public void addMeeting(Meeting meeting) {
         meetings.add(meeting);
     }
+    public void removeMeeting(Meeting meeting) {
+        meetings.remove(meeting);
+    }
 
     public User(String email, String password) {
         this.email = email;

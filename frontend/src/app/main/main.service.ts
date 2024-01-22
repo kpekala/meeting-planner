@@ -23,4 +23,8 @@ export class MainService {
         return this.http.get<MeetingDto[]>(this.meetingPath, {params: {'email': email}});
     }
 
+    deleteMeeting(id: number) {
+        return this.http.delete(this.meetingPath, {params: {'id': id}});
+    }
+
 }

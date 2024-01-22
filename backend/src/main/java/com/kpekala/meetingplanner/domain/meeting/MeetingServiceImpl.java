@@ -50,6 +50,10 @@ public class MeetingServiceImpl implements MeetingService{
     @Override
     @Transactional
     public void removeMeeting(Integer id) {
+        var meeting = meetingRepository.findById(id).orElseThrow();
+        var meetingUsers = meeting.getUsers();
+        meetingUsers.forEach(user -> user.removeMeeting(meeting));
+        userRepository.saveAll(meetingUsers);
         meetingRepository.deleteById(id);
     }
 
