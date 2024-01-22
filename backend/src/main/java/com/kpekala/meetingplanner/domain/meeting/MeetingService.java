@@ -11,4 +11,6 @@ public interface MeetingService {
     AddMeetingResponse addMeeting(AddMeetingRequest request);
 
     List<MeetingDto> getMeetings(String userEmail);
+
+    void removeMeeting(Integer id);
 }

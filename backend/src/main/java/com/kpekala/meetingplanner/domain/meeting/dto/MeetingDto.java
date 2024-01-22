@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class MeetingDto {
+    private Integer id;
     private String name;
     private ZonedDateTime startDate;
     private Integer durationMinutes;

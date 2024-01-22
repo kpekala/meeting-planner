@@ -47,12 +47,19 @@ public class MeetingServiceImpl implements MeetingService{
         return user.getMeetings().stream().map(this::mapToMeetingDto).toList();
     }
 
+    @Override
+    @Transactional
+    public void removeMeeting(Integer id) {
+        meetingRepository.deleteById(id);
+    }
+
     private MeetingDto mapToMeetingDto(Meeting meeting) {
         var meetingDto = new MeetingDto();
         meetingDto.setName(meeting.getName());
         meetingDto.setStartDate(meeting.getStartDate());
         meetingDto.setDurationMinutes(meeting.getDurationMinutes());
         meetingDto.setUserDtos(meeting.getUsers().stream().map(user -> new UserDto(user.getEmail())).toList());
+        meetingDto.setId(meeting.getId());
 
         return meetingDto;
     }
