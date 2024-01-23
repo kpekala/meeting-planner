@@ -30,10 +30,11 @@ export class FindMeetingsComponent {
     return `${date.toDateString()} ${time}`;
   }
 
-  onDeleteClick(meeting: MeetingDto) {
-    this.mainService.deleteMeeting(meeting.id).subscribe({
+  onDeleteClick(index: number) {
+    this.mainService.deleteMeeting(this.meetings[index].id).subscribe({
       next: () => {
         console.log("Deleted meeting");
+        this.meetings.splice(index, 1);
       },error: (errorMsg) => {
         console.log("Error when deleting meeting");
       }

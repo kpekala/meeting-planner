@@ -1,9 +1,6 @@
 package com.kpekala.meetingplanner.domain.meeting;
 
-import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingRequest;
-import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingResponse;
-import com.kpekala.meetingplanner.domain.meeting.dto.MeetingDto;
-import com.kpekala.meetingplanner.domain.meeting.dto.UserDto;
+import com.kpekala.meetingplanner.domain.meeting.dto.*;
 import com.kpekala.meetingplanner.domain.meeting.entity.Meeting;
 import com.kpekala.meetingplanner.domain.meeting.exception.MeetingOverlapsException;
 import com.kpekala.meetingplanner.domain.user.UserRepository;
@@ -28,7 +25,7 @@ public class MeetingServiceImpl implements MeetingService{
     public AddMeetingResponse addMeeting(AddMeetingRequest request) {
         var users = request.getUsers();
 
-        validateUsersCanJoinMeeting(users, request.getStartDate(), request.getDurationMinutes());
+        validateUsersCanJoinMeeting(users, request.getStartDate(), request.getDurationMinutes(), -1);
 
         var meeting = prepareMeeting(request);
         meetingRepository.save(meeting);
@@ -55,6 +52,20 @@ public class MeetingServiceImpl implements MeetingService{
         meetingUsers.forEach(user -> user.removeMeeting(meeting));
         userRepository.saveAll(meetingUsers);
         meetingRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void moveMeeting(MoveMeetingRequest request) {
+        var meeting = meetingRepository.findById(request.getId()).orElseThrow();
+        var meetingDto = mapToMeetingDto(meeting);
+        validateUsersCanJoinMeeting(meetingDto.getUserDtos(), request.getNewDate(),
+                meetingDto.getDurationMinutes(), meetingDto.getId());
+
+        meetingRepository.deleteById(request.getId());
+
+        meeting.setStartDate(request.getNewDate());
+        meetingRepository.save(meeting);
     }
 
     private MeetingDto mapToMeetingDto(Meeting meeting) {
@@ -84,13 +95,13 @@ public class MeetingServiceImpl implements MeetingService{
         return meeting;
     }
 
-    private void validateUsersCanJoinMeeting(List<UserDto> users, ZonedDateTime startDate, int durationMinutes) {
+    private void validateUsersCanJoinMeeting(List<UserDto> users, ZonedDateTime startDate, int durationMinutes, int ignoreMeetingId) {
         users.forEach(userDto -> {
-            validateUserCanJoinMeeting(userDto, startDate, durationMinutes);
+            validateUserCanJoinMeeting(userDto, startDate, durationMinutes, ignoreMeetingId);
         });
     }
 
-    private void validateUserCanJoinMeeting(UserDto userDto, ZonedDateTime startDate, int durationMinutes) {
+    private void validateUserCanJoinMeeting(UserDto userDto, ZonedDateTime startDate, int durationMinutes, int ignoreMeetingId) {
         var userOptional = userRepository.findByEmail(userDto.getEmail());
 
         // If user is not present, we can skip validation
@@ -98,13 +109,16 @@ public class MeetingServiceImpl implements MeetingService{
             return;
 
         var meetingOptional = userOptional.get().getMeetings().stream()
-                .filter(meeting -> meetingOverlaps(meeting, startDate, durationMinutes)).findFirst();
+                .filter(meeting -> meetingOverlaps(meeting, startDate, durationMinutes, ignoreMeetingId)).findFirst();
 
         if (meetingOptional.isPresent())
             throw new MeetingOverlapsException();
     }
 
-    private boolean meetingOverlaps(Meeting meeting, ZonedDateTime startDate, int durationMinutes) {
+    private boolean meetingOverlaps(Meeting meeting, ZonedDateTime startDate, int durationMinutes, int ignoreMeetingId) {
+        if (meeting.getId().equals(ignoreMeetingId))
+            return false;
+
         boolean overlaps;
         var endDate = startDate.plusMinutes(durationMinutes);
         var meetingEndDate = meeting.getStartDate().plusMinutes(meeting.getDurationMinutes());
