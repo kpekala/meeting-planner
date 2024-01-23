@@ -3,6 +3,7 @@ package com.kpekala.meetingplanner.domain.meeting;
 import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingRequest;
 import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingResponse;
 import com.kpekala.meetingplanner.domain.meeting.dto.MeetingDto;
+import com.kpekala.meetingplanner.domain.meeting.dto.MoveMeetingRequest;
 import com.kpekala.meetingplanner.domain.meeting.exception.MeetingOverlapsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,11 @@ public class MeetingController {
     @DeleteMapping
     public void deleteMeeting(@RequestParam int id) {
         meetingService.removeMeeting(id);
+    }
+
+    @PostMapping("move")
+    public void moveMeetings(@RequestBody MoveMeetingRequest request) {
+        meetingService.moveMeeting(request);
     }
 
     @ExceptionHandler({MeetingOverlapsException.class})

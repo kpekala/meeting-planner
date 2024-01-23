@@ -6,6 +6,11 @@ export interface MeetingDto {
     id: number;
 }
 
+export interface MoveMeetingRequest {
+    id: number;
+    newDate: string;
+}
+
 interface UserDto {
     email: string;
 }

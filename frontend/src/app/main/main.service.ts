@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { AddMeetingRequest} from "./add-meeting/dto/model"
 import { AuthService } from "../auth/auth.service";
-import { MeetingDto } from "./model";
+import { MeetingDto, MoveMeetingRequest } from "./model";
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +25,15 @@ export class MainService {
 
     deleteMeeting(id: number) {
         return this.http.delete(this.meetingPath, {params: {'id': id}});
+    }
+
+    moveMeeting(id: number, newDate: string) {
+        const body: MoveMeetingRequest = {
+            id: id,
+            newDate: newDate
+        };
+
+        return this.http.post(this.meetingPath + '/move', body);
     }
 
 }

@@ -62,8 +62,6 @@ public class MeetingServiceImpl implements MeetingService{
         validateUsersCanJoinMeeting(meetingDto.getUserDtos(), request.getNewDate(),
                 meetingDto.getDurationMinutes(), meetingDto.getId());
 
-        meetingRepository.deleteById(request.getId());
-
         meeting.setStartDate(request.getNewDate());
         meetingRepository.save(meeting);
     }

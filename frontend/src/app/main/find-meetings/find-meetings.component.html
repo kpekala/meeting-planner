@@ -15,7 +15,16 @@
                 <ul class="list-group">
                     <li *ngFor="let meeting of meetings; index as i" class="list-group-item">
                         {{meeting.name}} - {{localDateTime(meeting.startDate)}} - {{meeting.durationMinutes}} minutes
-                        <button class="btn btn-danger" style="float: right;" (click)="onDeleteClick(i)">Delete</button>
+                        <button class="btn btn-danger" style="float: right;" 
+                          (click)="onDeleteClick(i)">Delete</button>
+                        <button class="btn btn-secondary" style="float: right; margin-right: .5rem;" 
+                            (click)="onSwitchToMovingMeeting(i)">Move</button>
+                        <div *ngIf="movingMeetingIndex === i" style="margin-top: 1rem;">
+                            <input type="datetime-local" class="form-control" placeholder="" 
+                                [(ngModel)]="newDate">
+                            <button class="btn btn-success" style="float: right; margin-top: 1rem;" 
+                                (click)="onMoveMeeting(i)">Move meeting</button>
+                        </div>
                     </li>
                 </ul>
             </div>

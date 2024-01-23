@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MainService } from '../main.service';
 import { MeetingDto } from '../model';
+import { concatMap } from 'rxjs';
 
 @Component({
   selector: 'app-find-meetings',
@@ -11,6 +12,9 @@ export class FindMeetingsComponent {
 
   meetings: MeetingDto[];
   email: any;
+  movingMeetingIndex = -1;
+
+  newDate: string = null;
 
   constructor(private mainService: MainService) {
 
@@ -39,5 +43,26 @@ export class FindMeetingsComponent {
         console.log("Error when deleting meeting");
       }
     });
+  }
+
+  onSwitchToMovingMeeting(index: number) {
+    this.movingMeetingIndex = index;
+  }
+
+  onMoveMeeting(index: number) {
+    const date = new Date(this.newDate).toISOString();
+    this.mainService.moveMeeting(this.meetings[index].id, date)
+    .pipe(concatMap(response => this.mainService.getMeetings(this.email)))
+      .subscribe({
+          next: (meetings) => {
+            this.meetings = meetings;
+            console.log("Moved meeting");
+            alert("Moved meeting");
+          },
+          error: (errorMsg) => {
+            console.log(errorMsg);
+            alert("Failed to move meeting, detail: " + errorMsg.error.detail);
+          }
+      });
   }
 }
