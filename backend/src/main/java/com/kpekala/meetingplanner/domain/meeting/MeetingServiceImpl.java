@@ -66,6 +66,11 @@ public class MeetingServiceImpl implements MeetingService{
         meetingRepository.save(meeting);
     }
 
+    @Override
+    public FindTimeResponse findTime(FindTimeRequest request) {
+
+    }
+
     private MeetingDto mapToMeetingDto(Meeting meeting) {
         var meetingDto = new MeetingDto();
         meetingDto.setName(meeting.getName());

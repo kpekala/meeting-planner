@@ -1,9 +1,6 @@
 package com.kpekala.meetingplanner.domain.meeting;
 
-import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingRequest;
-import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingResponse;
-import com.kpekala.meetingplanner.domain.meeting.dto.MeetingDto;
-import com.kpekala.meetingplanner.domain.meeting.dto.MoveMeetingRequest;
+import com.kpekala.meetingplanner.domain.meeting.dto.*;
 
 import java.util.List;
 
@@ -16,4 +13,6 @@ public interface MeetingService {
     void removeMeeting(Integer id);
 
     void moveMeeting(MoveMeetingRequest request);
+
+    FindTimeResponse findTime(FindTimeRequest request);
 }
