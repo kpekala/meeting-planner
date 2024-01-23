@@ -19,6 +19,7 @@ public class MeetingServiceImpl implements MeetingService{
 
     private final UserRepository userRepository;
     private final MeetingRepository meetingRepository;
+    private final TimeFinder timeFinder;
 
     @Override
     @Transactional
@@ -68,7 +69,13 @@ public class MeetingServiceImpl implements MeetingService{
 
     @Override
     public FindTimeResponse findTime(FindTimeRequest request) {
+        var meetings = new ArrayList<Meeting>();
+        request.getUsers().forEach(userDto -> {
+            var user = userRepository.findByEmail(userDto.getEmail()).orElseThrow();
+            meetings.addAll(user.getMeetings());
+        });
 
+        return timeFinder.findTime(meetings);
     }
 
     private MeetingDto mapToMeetingDto(Meeting meeting) {
