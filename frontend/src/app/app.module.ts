@@ -11,6 +11,7 @@ import { HeaderComponent } from './main/header/header.component';
 import { AddMeetingComponent } from './main/add-meeting/add-meeting.component';
 import { AuthInterceptorService } from './auth/auth.interceptor.service';
 import { FindMeetingsComponent } from './main/find-meetings/find-meetings.component';
+import { FindTimeComponent } from './main/find-time/find-time.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { FindMeetingsComponent } from './main/find-meetings/find-meetings.compon
     MainComponent,
     HeaderComponent,
     AddMeetingComponent,
-    FindMeetingsComponent
+    FindMeetingsComponent,
+    FindTimeComponent
   ],
   imports: [
     BrowserModule,

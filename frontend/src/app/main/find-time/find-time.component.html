@@ -1,0 +1,23 @@
+<div class="row" style="justify-content: center; padding-top: 1rem;">
+    <div class="col-sm-6">
+        <h2>Find time for meeting:</h2>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <button class="btn btn-secondary" type="button"
+                    style="margin-right: 1rem;" (click)="onAddGuest()">Add guest</button>
+
+            <button type="submit" class="btn btn-primary">Find</button>
+
+            <div formArrayName="guests" style="margin-bottom: 1rem;">
+                <div class="row" *ngFor="let guest of guests; let i = index" 
+                [formGroupName]="i" style="margin-top: 1rem;">
+                    <div class="col">
+                        <label class="form-label">Email address</label>
+                        <input type="text"
+                            class="form-control"
+                            formControlName="email">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

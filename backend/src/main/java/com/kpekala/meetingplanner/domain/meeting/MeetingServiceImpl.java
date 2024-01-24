@@ -68,6 +68,7 @@ public class MeetingServiceImpl implements MeetingService{
     }
 
     @Override
+    @Transactional
     public FindTimeResponse findTime(FindTimeRequest request) {
         var meetings = new ArrayList<Meeting>();
         request.getUsers().forEach(userDto -> {

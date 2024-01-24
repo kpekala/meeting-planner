@@ -36,4 +36,9 @@ export class MainService {
         return this.http.post(this.meetingPath + '/move', body);
     }
 
+    findTime(users: string[]) {
+        users.push(this.authService.getUserEmail());
+        return this.http.get(this.meetingPath + '/find-time', {params: {'emails': users}});
+    }
+
 }

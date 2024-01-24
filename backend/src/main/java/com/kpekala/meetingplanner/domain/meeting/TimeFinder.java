@@ -32,6 +32,7 @@ public class TimeFinder {
             Interval lastInterval = merged.get(merged.size() - 1);
             if (merged.size() > 0 && interval.start <= lastInterval.end){
                 lastInterval = new Interval(lastInterval.start, Math.max(lastInterval.end, interval.end));
+                merged.set(merged.size() - 1, lastInterval);
             }else {
                 merged.add(interval);
             }

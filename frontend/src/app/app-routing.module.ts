@@ -5,6 +5,7 @@ import { MainComponent } from './main/main.component';
 import { AddMeetingComponent } from './main/add-meeting/add-meeting.component';
 import { canActivateAuthContent, goToMainIfAuthenticated } from './auth/auth-guard';
 import { FindMeetingsComponent } from './main/find-meetings/find-meetings.component';
+import { FindTimeComponent } from './main/find-time/find-time.component';
 
 const routes: Routes = [
   {path: 'auth', component: AuthComponent, canActivate: [goToMainIfAuthenticated]},
@@ -12,6 +13,7 @@ const routes: Routes = [
   children: [
     {path: 'add', component: AddMeetingComponent},
     {path: 'find', component: FindMeetingsComponent},
+    {path: 'find-time', component: FindTimeComponent},
     {path: '**', redirectTo: 'add'}
   ]},
   {path: '**', redirectTo: 'auth'}
