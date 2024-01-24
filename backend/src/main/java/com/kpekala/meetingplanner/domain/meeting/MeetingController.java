@@ -1,9 +1,6 @@
 package com.kpekala.meetingplanner.domain.meeting;
 
-import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingRequest;
-import com.kpekala.meetingplanner.domain.meeting.dto.AddMeetingResponse;
-import com.kpekala.meetingplanner.domain.meeting.dto.MeetingDto;
-import com.kpekala.meetingplanner.domain.meeting.dto.MoveMeetingRequest;
+import com.kpekala.meetingplanner.domain.meeting.dto.*;
 import com.kpekala.meetingplanner.domain.meeting.exception.MeetingOverlapsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +37,12 @@ public class MeetingController {
     @PostMapping("move")
     public void moveMeetings(@RequestBody MoveMeetingRequest request) {
         meetingService.moveMeeting(request);
+    }
+
+    @GetMapping("find-time")
+    public FindTimeResponse findTime(@RequestParam List<String> emails) {
+        var request = new FindTimeRequest(emails.stream().map(UserDto::new).toList());
+        return meetingService.findTime(request);
     }
 
     @ExceptionHandler({MeetingOverlapsException.class})
