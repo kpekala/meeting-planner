@@ -4,6 +4,7 @@ This is web application in which you can:
  - Plan meetings with your colleagues
  - Move or remove meetings
  - See your or your colleague meetings
+ - find time when you and your colleagues don't have any meetings
 ## Architecture
 ### Tech stack
 Application is written in Java 17 and Spring Boot 3 on the backend and Angular 15 and Typescript on the frontend.
