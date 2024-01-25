@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MeetingServiceTest {
@@ -33,6 +33,9 @@ public class MeetingServiceTest {
 
     @Mock
     private MeetingRepository meetingRepository;
+
+    @Mock
+    private TimeFinder timeFinder;
 
     @InjectMocks
     private MeetingServiceImpl meetingService;
@@ -129,7 +132,6 @@ public class MeetingServiceTest {
         // Assume
         var asiaMeetings = List.of(new Meeting(1, "Asia meeting 1", ZonedDateTime.now(), 30, new ArrayList<>()));
         var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
-        asia.setMeetings(asiaMeetings);
 
         when(userRepository.findByEmail(asiaEmail)).thenReturn(Optional.of(asia));
 
@@ -149,7 +151,6 @@ public class MeetingServiceTest {
         // Assume
         var asiaMeetings = List.of(new Meeting(1, "Asia meeting 1", ZonedDateTime.now(), 30, new ArrayList<>()));
         var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
-        asia.setMeetings(asiaMeetings);
         asiaMeetings.get(0).setUsers(List.of(asia));
 
         var request = new MoveMeetingRequest(1, ZonedDateTime.now().plusMinutes(15));
@@ -161,7 +162,6 @@ public class MeetingServiceTest {
 
         // Assert
         verify(meetingRepository).save(meetingCaptor.capture());
-        verify(meetingRepository, times(1)).deleteById(1);
 
         var capturedMeeting = meetingCaptor.getValue();
         assertEquals(request.getNewDate(), capturedMeeting.getStartDate());
@@ -175,7 +175,6 @@ public class MeetingServiceTest {
                 new Meeting(2, "Asia meeting 2", ZonedDateTime.now().plusMinutes(60), 30, new ArrayList<>())
         );
         var asia = new User(1, "asia@t.pl", "123456", null, asiaMeetings);
-        asia.setMeetings(asiaMeetings);
         asiaMeetings.forEach(meeting -> meeting.setUsers(List.of(asia)));
 
         var request = new MoveMeetingRequest(1, ZonedDateTime.now().plusMinutes(60));

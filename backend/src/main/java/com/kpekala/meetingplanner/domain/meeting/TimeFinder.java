@@ -21,18 +21,21 @@ public class TimeFinder {
         final long endTimeBound = Instant.now().plusSeconds(60 * 60 * 24 * 2).toEpochMilli();
 
         LinkedList<Interval> intervals = new LinkedList<>(mapMeetingsToIntervals(meetings).stream()
-                .filter(interval -> interval.start > startTimeBound && interval.start < endTimeBound)
+                .filter(interval -> interval.start >= startTimeBound || interval.start < endTimeBound)
                 .sorted(Comparator.comparingLong(i -> i.start))
                 .toList());
 
         LinkedList<Interval> merged = new LinkedList<>();
 
         while (intervals.size() > 0) {
-            Interval interval = intervals.removeLast();
-            Interval lastInterval = merged.get(merged.size() - 1);
-            if (merged.size() > 0 && interval.start <= lastInterval.end){
-                lastInterval = new Interval(lastInterval.start, Math.max(lastInterval.end, interval.end));
-                merged.set(merged.size() - 1, lastInterval);
+            Interval interval = intervals.removeFirst();
+            if (merged.size() > 0){
+                Interval lastInterval = merged.get(merged.size() - 1);
+                if(interval.start <= lastInterval.end) {
+                    merged.set(merged.size() - 1, new Interval(lastInterval.start, Math.max(lastInterval.end, interval.end)));
+                }else {
+                    merged.add(interval);
+                }
             }else {
                 merged.add(interval);
             }
@@ -45,8 +48,13 @@ public class TimeFinder {
             startTime = Instant.ofEpochMilli(merged.get(0).end);
             duration = merged.get(1).start - merged.get(0).end;
         }else if (merged.size() == 1) {
-            startTime = Instant.ofEpochMilli(startTimeBound);
-            duration = merged.get(0).start - startTimeBound;
+            if(merged.get(0).start - startTimeBound < 1000 * 5){
+                startTime = Instant.ofEpochMilli(merged.get(0).end);
+                duration = 30;
+            }else {
+                startTime = Instant.ofEpochMilli(startTimeBound);
+                duration = merged.get(0).start - startTimeBound;
+            }
         }else {
             startTime = Instant.ofEpochMilli(startTimeBound);
             duration = 30;
