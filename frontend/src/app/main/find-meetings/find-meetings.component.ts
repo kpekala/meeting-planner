@@ -23,6 +23,9 @@ export class FindMeetingsComponent {
   onFindMeetingsClick() {
     this.mainService.getMeetings(this.email).subscribe({
       next: (meetings) => {
+        if(meetings.length === 0) {
+          alert('No meetings found');
+        }
         this.meetings = meetings;
       }
     })
